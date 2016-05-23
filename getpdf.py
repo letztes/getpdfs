@@ -2,24 +2,13 @@
 # -*- coding: utf-8 -*- 
 
 print "content-type:text/html\n\n"
-#print '<a href="/getpdf/">back</a>'
 
 from HTMLParser import HTMLParser
-import cgi
-import cgitb
 import os
 import re
 import time
 import urllib2
 from urlparse import *
-
-cgitb.enable()  # for troubleshooting
-
-OUTPUT_DIRECTORY='/tmp/'
-
-form = cgi.FieldStorage()
-
-url = form.getvalue('url')
 
 	
 class MyHTMLParser(HTMLParser):
@@ -45,7 +34,7 @@ class MyHTMLParser(HTMLParser):
 class GetPdf:
 	def __init__(self, url):
 		self.url = url
-		self.output_directory = '/home/artur/output/'
+		self.output_directory = '/tmp/'
 		self.parser = MyHTMLParser()
 		self.parser.url = url
 		
@@ -54,13 +43,16 @@ class GetPdf:
 			
 		for url in links:
 			
+			if 'pdf' not in url:
+				continue
+			
 			time.sleep(1)
 			
 			file_name = url.split('/')[-1]
 			
 			response = urllib2.urlopen(url)
 
-			file_handle = open(OUTPUT_DIRECTORY + file_name, 'wb')
+			file_handle = open(self.output_directory + file_name, 'wb')
 			
 			file_size = int(response.info().getheaders("Content-Length")[0])
 
@@ -76,13 +68,14 @@ class GetPdf:
 		
 		if regex_string is None:
 			regex_string = '.*pdf'
-		regex_compiled = re.compile(regex_string)
-		links = []
 		
 		if regex_string is None:
 			return
 		
 		self.parser.feed(html)
+			
+		regex_compiled = re.compile(regex_string)
+		links = []
 		
 		for link_string in list(self.parser.links):
 			if re.match(regex_compiled, link_string):
