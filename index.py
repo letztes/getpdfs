@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*- 
 
-print "content-type:text/html\n\n"
+#print "content-type:text/html\n\n"
 #print '<a href="/getpdf/">back</a>'
 
 from HTMLParser import HTMLParser
@@ -28,7 +28,7 @@ if url and len(url) > 3:
 	level1regex = form.getvalue('level1regex')
 
 	if level1regex:
-		level2regex = level2regex = form.getvalue('level2regex')
+		level2regex = form.getvalue('level2regex')
 		
 		if level2regex:
 			level3regex = form.getvalue('level3regex')
@@ -47,7 +47,10 @@ if url and len(url) > 3:
 	
 	links = pdf_getter.get_links(html,level1regex)
 	
+	print 'Downloaded: '
 	print links
+	print "<br>"
+	print '<a href="/getpdf/">Back</a>'
 	
 	pdf_getter.get_pdfs(links)
 		

@@ -72,8 +72,10 @@ class GetPdf:
 
 			file_handle.write(response.read())
 
-	def get_links(self,html,regex_string):
-		regex_string = '.*pdf'
+	def get_links(self,html,regex_string=None):
+		
+		if regex_string is None:
+			regex_string = '.*pdf'
 		regex_compiled = re.compile(regex_string)
 		links = []
 		
